@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: rocket-launch-sim
+    runtime: static
+    buildCommand: npm run build
+    publishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: 20
