@@ -101,8 +101,14 @@ const App: React.FC = () => {
     // Rocket
     const rx = width / 2;
     const ry = height - 100;
+    const scale = 0.5 + (weight / 50) * 0.7; // Scale between 0.6x and 1.2x
 
     if (state !== 'CRASHED') {
+      ctx.save();
+      ctx.translate(rx, ry);
+      ctx.scale(scale, scale);
+      ctx.translate(-rx, -ry);
+
       // Body
       ctx.fillStyle = '#edf2f7';
       ctx.beginPath();
@@ -146,6 +152,7 @@ const App: React.FC = () => {
         ctx.lineTo(rx + 5, ry + 40);
         ctx.fill();
       }
+      ctx.restore();
     } else {
       // Crash particles
       ctx.fillStyle = '#e53e3e';
@@ -238,19 +245,30 @@ const App: React.FC = () => {
           
           <div className="bg-black/40 backdrop-blur-md p-3 rounded-lg border border-slate-700/50">
              <p className="text-[10px] uppercase tracking-widest text-slate-500 mb-2">Rocket Mass (Weight)</p>
-             <input 
-               type="range" 
-               min="5" 
-               max="50" 
-               step="1" 
-               value={weight} 
-               onChange={(e) => setWeight(Number(e.target.value))}
-               disabled={state !== 'GROUND'}
-               className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
-             />
+             <div className="flex items-center space-x-3">
+               <input 
+                 type="range" 
+                 min="5" 
+                 max="50" 
+                 step="1" 
+                 value={weight} 
+                 onChange={(e) => setWeight(Number(e.target.value))}
+                 disabled={state !== 'GROUND'}
+                 className="flex-1 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-blue-500"
+               />
+               <input
+                 type="number"
+                 min="5"
+                 max="50"
+                 value={weight}
+                 onChange={(e) => setWeight(Math.min(50, Math.max(5, Number(e.target.value))))}
+                 disabled={state !== 'GROUND'}
+                 className="w-12 bg-slate-800 border border-slate-700 rounded text-xs px-1 py-0.5 focus:outline-none focus:border-blue-500"
+               />
+             </div>
              <div className="flex justify-between mt-1">
                <span className="text-[10px] text-slate-500">{weight} kg</span>
-               {state !== 'GROUND' && <span className="text-[10px] text-orange-400">LOCKED</span>}
+               {state !== 'GROUND' && <span className="text-[10px] text-orange-400 font-bold">LOCKED</span>}
              </div>
           </div>
 
